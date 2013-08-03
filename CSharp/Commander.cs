@@ -37,45 +37,46 @@ namespace CruiseControl
             //Loop through each vessel to see if we can issue a command
             foreach (var vessel in _currentBoard.MyVesselStatuses)
             {
-                if (vessel.Health > 0 && vessel.MovesUntilRepair == 0)
-                {
-                    if (moveShipFromWall)
-                    {
-                        var direction = GetDirectionToMoveVesselFromEdge(vessel.Location, _currentBoard.BoardMinCoordinate, _currentBoard.BoardMaxCoordinate);
-                        if (direction != String.Empty)
-                        {
-                            cmds.Add(new Command { vesselid = vessel.Id, action = String.Format(CommandType.Move, direction) });
-                            continue;
-                        }
-                    }
+                cmds.Add(new Command { vesselid = vessel.Id, action = String.Format(CommandType.Move,"south") });
 
-                    //Check if we should move to collide with ship
-                    var directionForCollision = GetDirectionToMoveVesselIntoCollision(vessel.Location, vessel.SonarReport);
-                    if (directionForCollision != null)
-                        cmds.Add(new Command
-                        {
-                            vesselid = vessel.Id,
-                            action = String.Format(CommandType.Move,directionForCollision)
-                        });
+                //if (vessel.Health > 0 && vessel.MovesUntilRepair == 0)
+                //{
+                //    if (moveShipFromWall)
+                //    {
+                //        var direction = GetDirectionToMoveVesselFromEdge(vessel.Location, _currentBoard.BoardMinCoordinate, _currentBoard.BoardMaxCoordinate);
+                //        if (direction != String.Empty)
+                //        {
+                //            cmds.Add(new Command { vesselid = vessel.Id, action = String.Format(CommandType.Move, direction) });
+                //            continue;
+                //        }
+                //    }
 
-                    var coordinateToFireMissile = GetCoordinateToFireMissile(vessel.SonarReport);
-                    if (coordinateToFireMissile != null)
-                        cmds.Add(new Command
-                        {
-                            vesselid = vessel.Id,
-                            action = CommandType.Fire
-                            ,
-                            coordinate = new Coordinate { X = coordinateToFireMissile.X, Y = coordinateToFireMissile.Y }
-                        });
+                //    //Check if we should move to collide with ship
+                //    var directionForCollision = GetDirectionToMoveVesselIntoCollision(vessel.Location, vessel.SonarReport);
+                //    if (directionForCollision != null)
+                //        cmds.Add(new Command
+                //        {
+                //            vesselid = vessel.Id,
+                //            action = String.Format(CommandType.Move,directionForCollision)
+                //        });
 
-                    if (vessel.Health < (MIN_HEALTH_BEFORE_REPAIR * vessel.MaxHealth))
-                    {
-                        cmds.Add(new Command { vesselid = vessel.Id, action = CommandType.Repair });
-                        continue;
-                    }
+                //    var coordinateToFireMissile = GetCoordinateToFireMissile(vessel.SonarReport);
+                //    if (coordinateToFireMissile != null)
+                //        cmds.Add(new Command
+                //        {
+                //            vesselid = vessel.Id,
+                //            action = CommandType.Fire
+                //            ,
+                //            coordinate = new Coordinate { X = coordinateToFireMissile.X, Y = coordinateToFireMissile.Y }
+                //        });
 
-                    //Check to move
-                }
+                //    if (vessel.Health < (MIN_HEALTH_BEFORE_REPAIR * vessel.MaxHealth))
+                //    {
+                //        cmds.Add(new Command { vesselid = vessel.Id, action = CommandType.Repair });
+                //        continue;
+                //    }
+
+                //}
             }
 
             

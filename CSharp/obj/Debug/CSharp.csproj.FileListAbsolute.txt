@@ -15,3 +15,12 @@ C:\Code\Play\CSharp\CSharp\bin\Newtonsoft.Json.dll
 C:\Code\Play\CSharp\CSharp\bin\Newtonsoft.Json.xml
 C:\Code\Play\CSharp\CSharp\obj\Debug\CruiseControl.dll
 C:\Code\Play\CSharp\CSharp\obj\Debug\CruiseControl.pdb
+C:\Users\brian.slick\Documents\GitHub\CruiseControl\CSharp\bin\CruiseControl.dll
+C:\Users\brian.slick\Documents\GitHub\CruiseControl\CSharp\bin\CruiseControl.pdb
+C:\Users\brian.slick\Documents\GitHub\CruiseControl\CSharp\bin\Nancy.dll
+C:\Users\brian.slick\Documents\GitHub\CruiseControl\CSharp\bin\Nancy.Hosting.Aspnet.dll
+C:\Users\brian.slick\Documents\GitHub\CruiseControl\CSharp\bin\Newtonsoft.Json.dll
+C:\Users\brian.slick\Documents\GitHub\CruiseControl\CSharp\bin\Newtonsoft.Json.xml
+C:\Users\brian.slick\Documents\GitHub\CruiseControl\CSharp\obj\Debug\CSharp.csprojResolveAssemblyReference.cache
+C:\Users\brian.slick\Documents\GitHub\CruiseControl\CSharp\obj\Debug\CruiseControl.dll
+C:\Users\brian.slick\Documents\GitHub\CruiseControl\CSharp\obj\Debug\CruiseControl.pdb

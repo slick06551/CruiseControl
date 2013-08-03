@@ -21,56 +21,56 @@ namespace CruiseControl
         public List<Command> GiveCommands()
         {
             var cmds = new List<Command>();
-            bool moveShipFromWall = false;
+            //bool moveShipFromWall = false;
             
-            //Check board status to see if we need to move any ships
-            int teamCounter = 0;
-            foreach(var team in _currentBoard.VesselCountPerTeamId)
-            {
-                if (team.VesselCount > 0)
-                    teamCounter++;
-            }
+            ////Check board status to see if we need to move any ships
+            //int teamCounter = 0;
+            //foreach(var team in _currentBoard.VesselCountPerTeamId)
+            //{
+            //    if (team.VesselCount > 0)
+            //        teamCounter++;
+            //}
 
-            if (_currentBoard.TurnsUntilBoardShrink <= teamCounter)
-                moveShipFromWall = true;
+            //if (_currentBoard.TurnsUntilBoardShrink <= teamCounter)
+            //    moveShipFromWall = true;
 
-            //Loop through each vessel to see if we can issue a command
-            foreach (var vessel in _currentBoard.MyVesselStatuses)
-            {
-                if (vessel.Health > 0 && vessel.MovesUntilRepair==0)
-                {
-                    if (moveShipFromWall)
-                    {
-                        var direction = GetDirectionToMoveVesselFromEdge(vessel.Location, _currentBoard.BoardMinCoordinate, _currentBoard.BoardMaxCoordinate);
-                        if (direction != String.Empty)
-                        {
-                            cmds.Add(new Command { vesselid = vessel.Id, action = String.Format(CommandType.Move, direction) });
-                            continue;
-                        }
-                    }
+            ////Loop through each vessel to see if we can issue a command
+            //foreach (var vessel in _currentBoard.MyVesselStatuses)
+            //{
+            //    if (vessel.Health > 0 && vessel.MovesUntilRepair==0)
+            //    {
+            //        if (moveShipFromWall)
+            //        {
+            //            var direction = GetDirectionToMoveVesselFromEdge(vessel.Location, _currentBoard.BoardMinCoordinate, _currentBoard.BoardMaxCoordinate);
+            //            if (direction != String.Empty)
+            //            {
+            //                cmds.Add(new Command { vesselid = vessel.Id, action = String.Format(CommandType.Move, direction) });
+            //                continue;
+            //            }
+            //        }
 
-                    //Check if we should move to collide with ship
+            //        //Check if we should move to collide with ship
 
-                    var coordinateToFireMissile = GetCoordinateToFireMissile(vessel.SonarReport);
-                    if(coordinateToFireMissile != null)
-                        cmds.Add(new Command { vesselid = vessel.Id, action = CommandType.Fire
-                            ,coordinate = new Coordinate { X = coordinateToFireMissile.X, Y = coordinateToFireMissile.Y }
-                        });
+            //        var coordinateToFireMissile = GetCoordinateToFireMissile(vessel.SonarReport);
+            //        if(coordinateToFireMissile != null)
+            //            cmds.Add(new Command { vesselid = vessel.Id, action = CommandType.Fire
+            //                ,coordinate = new Coordinate { X = coordinateToFireMissile.X, Y = coordinateToFireMissile.Y }
+            //            });
                         
-                    if (vessel.Health < (MIN_HEALTH_BEFORE_REPAIR * vessel.MaxHealth))
-                    {
-                        cmds.Add(new Command { vesselid = vessel.Id, action = CommandType.Repair });
-                        continue;
-                    }
+            //        if (vessel.Health < (MIN_HEALTH_BEFORE_REPAIR * vessel.MaxHealth))
+            //        {
+            //            cmds.Add(new Command { vesselid = vessel.Id, action = CommandType.Repair });
+            //            continue;
+            //        }
 
-                    //Check to move
-                }
-            }
+            //        //Check to move
+            //    }
+            //}
 
             // Add Commands Here.
             // You can only give as many commands as you have un-sunk vessels. Powerup commands do not count against this number. 
             // You are free to use as many powerup commands at any time. Any additional commands you give (past the number of active vessels) will be ignored.
-			cmds.Add(new Command { vesselid = 1, action = CommandType.Fire, coordinate = new Coordinate { X = 1, Y = 1 } });
+			//cmds.Add(new Command { vesselid = 1, action = CommandType.Fire, coordinate = new Coordinate { X = 1, Y = 1 } });
 
             return cmds;
         }
@@ -95,7 +95,7 @@ namespace CruiseControl
                     return "east";
                 if(coord.X == boardMax.X)
                     return "west";
-                if (coord.Y > boardMin.Y)
+                if (coord.Y == boardMin.Y)
                     return "south";
                 if(coord.Y == boardMax.Y)
                     return "north";
@@ -103,14 +103,29 @@ namespace CruiseControl
             return String.Empty;
         }
 
-        private static Coordinate GetDirectionToMoveVesselIntoCollision(List<Coordinate> sonarReport)
+        private static string GetDirectionToMoveVesselIntoCollision(List<Coordinate> vesselCoords, List<Coordinate> sonarReport)
         {
-            if (sonarReport.Count > 0)
-            { 
-                return sonarReport[sonarReport.Count/2];
-            }
+            foreach (var coord in vesselCoords)
+            {
+                foreach (var sonarCoord in sonarReport)
+                {
+                    if ((Math.Abs(coord.X - sonarCoord.X) == 1 || Math.Abs(coord.Y - sonarCoord.Y) == 1)
+                        &&
+                        (Math.Abs(coord.X - sonarCoord.X) == 0 || Math.Abs(coord.Y - sonarCoord.Y) == 0))
+                    {
+                        if ((coord.X - sonarCoord.X) == 1)
+                            return "east";
+                        if ((coord.X - sonarCoord.X) == -1)
+                            return "west";
 
-            return null;
+                        if ((coord.Y - sonarCoord.Y) == 1)
+                            return "north";
+                        if ((coord.Y - sonarCoord.Y) == -1)
+                            return "south";
+                    }                  
+                }
+            }
+            return String.Empty;
         }
 
         private static Coordinate GetCoordinateToFireMissile(List<Coordinate> sonarReport)
